@@ -1,200 +1,65 @@
-
 <!DOCTYPE html>
 <html>
 <head>
-<title>Daily News Portal</title>
-
-<style>
-
-body{
-font-family: Arial;
-background:#f5f7fa;
-margin:0;
-}
-
-/* NAVBAR */
-nav{
-background:#112227;
-padding:15px;
-display:flex;
-justify-content:space-between;
-align-items:center;
-}
-
-nav h2{
-color:white;
-margin-left:20px;
-}
-
-nav div a{
-color:white;
-margin:15px;
-text-decoration:none;
-font-weight:bold;
-}
-
-nav div a:hover{
-color:#3b82f6;
-}
-
-/* HERO IMAGE */
-.hero{
-height:350px;
-background:url('https://images.unsplash.com/photo-1504711434969-e33886168f5c');
-background-size:cover;
-background-position:center;
-display:flex;
-justify-content:center;
-align-items:center;
-color:white;
-text-align:center;
-}
-
-.hero h1{
-font-size:42px;
-background:rgba(0,0,0,0.6);
-padding:15px 30px;
-border-radius:10px;
-}
-
-/* CONTAINER */
-.container{
-padding:40px;
-display:flex;
-gap:25px;
-flex-wrap:wrap;
-justify-content:center;
-}
-
-/* CARD */
-.card{
-background:white;
-width:280px;
-border-radius:12px;
-box-shadow:0 5px 15px rgba(0,0,0,0.2);
-overflow:hidden;
-transition:0.3s;
-}
-
-.card:hover{
-transform:scale(1.05);
-}
-
-.card img{
-width:100%;
-height:180px;
-object-fit:cover;
-}
-
-.card-content{
-padding:15px;
-}
-
-.card-content h3{
-margin-bottom:10px;
-}
-
-button{
-padding:8px 15px;
-margin-top:10px;
-cursor:pointer;
-background:#3b82f6;
-color:white;
-border:none;
-border-radius:5px;
-}
-
-button:hover{
-background:#2563eb;
-}
-
-/* FOOTER */
-footer{
-background:#111827;
-color:white;
-padding:15px;
-text-align:center;
-margin-top:40px;
-}
-
-</style>
-
+  <title>News Portal</title>
+  <style>
+    body { font-family: Arial; }
+    nav { background: black; padding: 10px; }
+    nav a {
+      color: white;
+      margin: 10px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    section {
+      padding: 20px;
+      display: none;
+    }
+  </style>
 </head>
-
 <body>
 
 <nav>
-<h2>📰 DailyNews</h2>
-
-<div>
-<a href="/">Home</a>
-<a href="/technology">Technology</a>
-<a href="/politics">Politics</a>
-<a href="/sports">Sports</a>
-<a href="/business">Business</a>
-<a href="/entertainment">Entertainment</a>
-</div>
+  <a href="#" onclick="showSection('technology')">Technology</a>
+  <a href="#" onclick="showSection('politics')">Politics</a>
+  <a href="#" onclick="showSection('sports')">Sports</a>
+  <a href="#" onclick="showSection('business')">Business</a>
+  <a href="#" onclick="showSection('entertainment')">Entertainment</a>
 </nav>
 
-<!-- HERO IMAGE SECTION -->
-<div class="hero">
-<h1>Stay Updated with Latest News</h1>
-</div>
+<section id="technology">
+  <h2>Technology News</h2>
+  <p>Latest technology news here.</p>
+</section>
 
-<!-- NEWS CARDS -->
-<div class="container">
+<section id="politics">
+  <h2>Politics News</h2>
+  <p>Latest politics news here.</p>
+</section>
 
-<div class="card">
-<img src="https://images.unsplash.com/photo-1518770660439-4636190af475">
-<div class="card-content">
-<h3>Technology</h3>
-<p>Latest AI, gadgets, and innovation news.</p>
-<a href="/technology"><button>Read News</button></a>
-</div>
-</div>
+<section id="sports">
+  <h2>Sports News</h2>
+  <p>Latest sports news here.</p>
+</section>
 
-<div class="card">
-<img src="https://images.unsplash.com/photo-1529107386315-e1a2ed48a620">
-<div class="card-content">
-<h3>Politics</h3>
-<p>Government policies and political updates.</p>
-<a href="/politics"><button>Read News</button></a>
-</div>
-</div>
+<section id="business">
+  <h2>Business News</h2>
+  <p>Latest business news here.</p>
+</section>
 
-<div class="card">
-<img src="https://images.unsplash.com/photo-1546519638-68e109498ffc">
-<div class="card-content">
-<h3>Sports</h3>
-<p>Cricket, football, and sports highlights.</p>
-<a href="/sports"><button>Read News</button></a>
-</div>
-</div>
+<section id="entertainment">
+  <h2>Entertainment News</h2>
+  <p>Latest entertainment news here.</p>
+</section>
 
-<div class="card">
-<img src="https://images.unsplash.com/photo-1444653389962-8149286c578a">
-<div class="card-content">
-<h3>Business</h3>
-<p>Stock market and financial news.</p>
-<a href="/business"><button>Read News</button></a>
-</div>
-</div>
-
-<div class="card">
-<img src="https://images.unsplash.com/photo-1497032205916-ac775f0649ae">
-<div class="card-content">
-<h3>Entertainment</h3>
-<p>Movies, celebrities, and entertainment news.</p>
-<a href="/entertainment"><button>Read News</button></a>
-</div>
-</div>
-
-</div>
-
-<footer>
-DailyNews © 2026 | Professional News Portal
-</footer>
+<script>
+function showSection(sectionId) {
+  document.querySelectorAll("section").forEach(section => {
+    section.style.display = "none";
+  });
+  document.getElementById(sectionId).style.display = "block";
+}
+</script>
 
 </body>
 </html>
-"""
