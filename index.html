@@ -1,119 +1,200 @@
+
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Daily News Portal</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background-color: #f4f6f9;
-        }
+<title>Daily News Portal</title>
 
-        header {
-            background: #0d1b2a;
-            color: white;
-            padding: 15px;
-            text-align: center;
-        }
+<style>
 
-        nav {
-            background: #1b263b;
-            padding: 10px;
-            text-align: center;
-        }
+body{
+font-family: Arial;
+background:#f5f7fa;
+margin:0;
+}
 
-        nav a {
-            color: white;
-            text-decoration: none;
-            margin: 0 15px;
-            font-weight: bold;
-        }
+/* NAVBAR */
+nav{
+background:#112227;
+padding:15px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
 
-        nav a:hover {
-            color: #00b4d8;
-        }
+nav h2{
+color:white;
+margin-left:20px;
+}
 
-        .container {
-            padding: 20px;
-        }
+nav div a{
+color:white;
+margin:15px;
+text-decoration:none;
+font-weight:bold;
+}
 
-        .news-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-        }
+nav div a:hover{
+color:#3b82f6;
+}
 
-        .card {
-            background: white;
-            padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            transition: 0.3s;
-        }
+/* HERO IMAGE */
+.hero{
+height:350px;
+background:url('https://images.unsplash.com/photo-1504711434969-e33886168f5c');
+background-size:cover;
+background-position:center;
+display:flex;
+justify-content:center;
+align-items:center;
+color:white;
+text-align:center;
+}
 
-        .card:hover {
-            transform: scale(1.03);
-        }
+.hero h1{
+font-size:42px;
+background:rgba(0,0,0,0.6);
+padding:15px 30px;
+border-radius:10px;
+}
 
-        .card img {
-            width: 100%;
-            border-radius: 5px;
-        }
+/* CONTAINER */
+.container{
+padding:40px;
+display:flex;
+gap:25px;
+flex-wrap:wrap;
+justify-content:center;
+}
 
-        footer {
-            background: #0d1b2a;
-            color: white;
-            text-align: center;
-            padding: 15px;
-            margin-top: 20px;
-        }
-    </style>
+/* CARD */
+.card{
+background:white;
+width:280px;
+border-radius:12px;
+box-shadow:0 5px 15px rgba(0,0,0,0.2);
+overflow:hidden;
+transition:0.3s;
+}
+
+.card:hover{
+transform:scale(1.05);
+}
+
+.card img{
+width:100%;
+height:180px;
+object-fit:cover;
+}
+
+.card-content{
+padding:15px;
+}
+
+.card-content h3{
+margin-bottom:10px;
+}
+
+button{
+padding:8px 15px;
+margin-top:10px;
+cursor:pointer;
+background:#3b82f6;
+color:white;
+border:none;
+border-radius:5px;
+}
+
+button:hover{
+background:#2563eb;
+}
+
+/* FOOTER */
+footer{
+background:#111827;
+color:white;
+padding:15px;
+text-align:center;
+margin-top:40px;
+}
+
+</style>
+
 </head>
 
 <body>
 
-<header>
-    <h1>Daily News Portal</h1>
-</header>
-
 <nav>
-    <a href="#">Home</a>
-    <a href="#">Technology</a>
-    <a href="#">Politics</a>
-    <a href="#">Sports</a>
-    <a href="#">Business</a>
-    <a href="#">Entertainment</a>
+<h2>📰 DailyNews</h2>
+
+<div>
+<a href="/">Home</a>
+<a href="/technology">Technology</a>
+<a href="/politics">Politics</a>
+<a href="/sports">Sports</a>
+<a href="/business">Business</a>
+<a href="/entertainment">Entertainment</a>
+</div>
 </nav>
 
+<!-- HERO IMAGE SECTION -->
+<div class="hero">
+<h1>Stay Updated with Latest News</h1>
+</div>
+
+<!-- NEWS CARDS -->
 <div class="container">
-    <h2>Latest News</h2>
 
-    <div class="news-grid">
-        <div class="card">
-            <img src="https://images.unsplash.com/photo-1518770660439-4636190af475" />
-            <h3>AI Revolution</h3>
-            <p>Artificial Intelligence is transforming industries worldwide.</p>
-        </div>
+<div class="card">
+<img src="https://images.unsplash.com/photo-1518770660439-4636190af475">
+<div class="card-content">
+<h3>Technology</h3>
+<p>Latest AI, gadgets, and innovation news.</p>
+<a href="/technology"><button>Read News</button></a>
+</div>
+</div>
 
-        <div class="card">
-            <img src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d" />
-            <h3>Tech Innovation</h3>
-            <p>New technology trends are shaping the future.</p>
-        </div>
+<div class="card">
+<img src="https://images.unsplash.com/photo-1529107386315-e1a2ed48a620">
+<div class="card-content">
+<h3>Politics</h3>
+<p>Government policies and political updates.</p>
+<a href="/politics"><button>Read News</button></a>
+</div>
+</div>
 
-        <div class="card">
-            <img src="https://images.unsplash.com/photo-1520975922203-b4e5b39b93b4" />
-            <h3>Global Markets</h3>
-            <p>Stock markets show steady growth this quarter.</p>
-        </div>
-    </div>
+<div class="card">
+<img src="https://images.unsplash.com/photo-1546519638-68e109498ffc">
+<div class="card-content">
+<h3>Sports</h3>
+<p>Cricket, football, and sports highlights.</p>
+<a href="/sports"><button>Read News</button></a>
+</div>
+</div>
+
+<div class="card">
+<img src="https://images.unsplash.com/photo-1444653389962-8149286c578a">
+<div class="card-content">
+<h3>Business</h3>
+<p>Stock market and financial news.</p>
+<a href="/business"><button>Read News</button></a>
+</div>
+</div>
+
+<div class="card">
+<img src="https://images.unsplash.com/photo-1497032205916-ac775f0649ae">
+<div class="card-content">
+<h3>Entertainment</h3>
+<p>Movies, celebrities, and entertainment news.</p>
+<a href="/entertainment"><button>Read News</button></a>
+</div>
+</div>
+
 </div>
 
 <footer>
-    © 2026 Daily News Portal | Developed by virat831
+DailyNews © 2026 | Professional News Portal
 </footer>
 
 </body>
 </html>
+"""
