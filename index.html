@@ -5,7 +5,28 @@
 <title>Daily News Portal</title>
 
 <style>
+<script>
+fetch("./data.json")
+.then(response => response.json())
+.then(data => {
 
+let container = document.getElementById("news-container");
+
+data.forEach(news => {
+
+container.innerHTML += `
+<div class="card">
+<img src="${news.image}" width="100%">
+<h3>${news.title}</h3>
+<p>${news.description}</p>
+</div>
+`;
+
+});
+
+})
+.catch(error => console.log("Error loading JSON:", error));
+</script>
 body{
 font-family: Arial;
 background:#f5f7fa;
@@ -198,3 +219,4 @@ DailyNews © 2026 | Professional News Portal
 </body>
 </html>
 """
+
