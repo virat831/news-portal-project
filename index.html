@@ -1,34 +1,11 @@
-
 <!DOCTYPE html>
 <html>
 <head>
 <title>Daily News Portal</title>
 
 <style>
-<script>
-fetch("./data.json")
-.then(response => response.json())
-.then(data => {
 
-let container = document.getElementById("news-container");
-
-data.forEach(news => {
-
-container.innerHTML += `
-<div class="card">
-<img src="${news.image}" width="100%">
-<h3>${news.title}</h3>
-<p>${news.description}</p>
-</div>
-`;
-
-});
-
-})
-.catch(error => console.log("Error loading JSON:", error));
-</script>
 body{
-  <div id="news-container"></div>
 font-family: Arial;
 background:#f5f7fa;
 margin:0;
@@ -79,7 +56,7 @@ padding:15px 30px;
 border-radius:10px;
 }
 
-/* CONTAINER */
+/* NEWS CONTAINER */
 .container{
 padding:40px;
 display:flex;
@@ -112,33 +89,6 @@ object-fit:cover;
 padding:15px;
 }
 
-.card-content h3{
-margin-bottom:10px;
-}
-
-button{
-padding:8px 15px;
-margin-top:10px;
-cursor:pointer;
-background:#3b82f6;
-color:white;
-border:none;
-border-radius:5px;
-}
-
-button:hover{
-background:#2563eb;
-}
-
-/* FOOTER */
-footer{
-background:#111827;
-color:white;
-padding:15px;
-text-align:center;
-margin-top:40px;
-}
-
 </style>
 
 </head>
@@ -149,76 +99,54 @@ margin-top:40px;
 <h2>📰 DailyNews</h2>
 
 <div>
-<a href="/news-portal-project/">Home</a>
-<a href="/news-portal-project/technology">Technology</a>
-<a href="/news-portal-project/politics">Politics</a>
-<a href="/news-portal-project/sports">Sports</a>
-<a href="/news-portal-project/business">Business</a>
-<a href="/news-portal-project/entertainment">Entertainment</a>
+<a href="./index.html">Home</a>
+<a href="./technology.html">Technology</a>
+<a href="./politics.html">Politics</a>
+<a href="./sports.html">Sports</a>
+<a href="./business.html">Business</a>
+<a href="./entertainment.html">Entertainment</a>
 </div>
 </nav>
 
-<!-- HERO IMAGE SECTION -->
 <div class="hero">
 <h1>Stay Updated with Latest News</h1>
 </div>
 
-<!-- NEWS CARDS -->
-<div class="container">
-
-<div class="card">
-<img src="https://images.unsplash.com/photo-1518770660439-4636190af475">
-<div class="card-content">
-<h3>Technology</h3>
-<p>Latest AI, gadgets, and innovation news.</p>
-<a href="/news-portal-project/technology"><button>Read News</button></a>
-</div>
-</div>
-
-<div class="card">
-<img src="https://images.unsplash.com/photo-1529107386315-e1a2ed48a620">
-<div class="card-content">
-<h3>Politics</h3>
-<p>Government policies and political updates.</p>
-<a href="/news-portal-project/politics"><button>Read News</button></a>
-</div>
-</div>
-
-<div class="card">
-<img src="https://images.unsplash.com/photo-1546519638-68e109498ffc">
-<div class="card-content">
-<h3>Sports</h3>
-<p>Cricket, football, and sports highlights.</p>
-<a href="/news-portal-project/sports"><button>Read News</button></a>
-</div>
-</div>
-
-<div class="card">
-<img src="https://images.unsplash.com/photo-1444653389962-8149286c578a">
-<div class="card-content">
-<h3>Business</h3>
-<p>Stock market and financial news.</p>
-<a href="/news-portal-project/business"><button>Read News</button></a>
-</div>
-</div>
-
-<div class="card">
-<img src="https://images.unsplash.com/photo-1497032205916-ac775f0649ae">
-<div class="card-content">
-<h3>Entertainment</h3>
-<p>Movies, celebrities, and entertainment news.</p>
-<a href="/news-portal-project/entertainment"><button>Read News</button></a>
-</div>
-</div>
-
-</div>
+<!-- JSON NEWS WILL LOAD HERE -->
+<div class="container" id="news-container"></div>
 
 <footer>
 DailyNews © 2026 | Professional News Portal
 </footer>
 
+<!-- JSON CONNECTION SCRIPT -->
+<script>
+
+fetch("data.json")
+.then(response => response.json())
+.then(data => {
+
+let container = document.getElementById("news-container");
+
+data.forEach(news => {
+
+container.innerHTML += `
+<div class="card">
+<img src="${news.image}">
+<div class="card-content">
+<h3>${news.title}</h3>
+<p>${news.description}</p>
+<p><b>${news.category}</b></p>
+</div>
+</div>
+`;
+
+});
+
+})
+.catch(error => console.log("Error loading JSON:", error));
+
+</script>
+
 </body>
 </html>
-"""
-
-
