@@ -1,79 +1,160 @@
+```html
 <!DOCTYPE html>
 <html>
 <head>
-  <title>News Portal</title>
+<title>Daily News Portal</title>
 
-  <style>
-    body {
-      font-family: Arial;
-      background: #f5f5f5;
-      padding: 20px;
-    }
+<style>
 
-    h1 {
-      text-align: center;
-    }
+body{
+font-family: Arial;
+background:#f5f7fa;
+margin:0;
+}
 
-    .news-container {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 20px;
-    }
+/* NAVBAR */
+nav{
+background:#112227;
+padding:15px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
 
-    .card {
-      background: white;
-      padding: 10px;
-      border-radius: 10px;
-    }
+nav h2{
+color:white;
+margin-left:20px;
+}
 
-    img {
-      width: 100%;
-    }
-  </style>
+nav div a{
+color:white;
+margin:15px;
+text-decoration:none;
+font-weight:bold;
+}
+
+nav div a:hover{
+color:#3b82f6;
+}
+
+/* HERO IMAGE */
+.hero{
+height:350px;
+background:url('https://images.unsplash.com/photo-1504711434969-e33886168f5c');
+background-size:cover;
+background-position:center;
+display:flex;
+justify-content:center;
+align-items:center;
+color:white;
+text-align:center;
+}
+
+.hero h1{
+font-size:42px;
+background:rgba(0,0,0,0.6);
+padding:15px 30px;
+border-radius:10px;
+}
+
+/* NEWS CONTAINER */
+.container{
+padding:40px;
+display:flex;
+gap:25px;
+flex-wrap:wrap;
+justify-content:center;
+}
+
+/* CARD */
+.card{
+background:white;
+width:280px;
+border-radius:12px;
+box-shadow:0 5px 15px rgba(0,0,0,0.2);
+overflow:hidden;
+transition:0.3s;
+}
+
+.card:hover{
+transform:scale(1.05);
+}
+
+.card img{
+width:100%;
+height:180px;
+object-fit:cover;
+}
+
+.card-content{
+padding:15px;
+}
+
+footer{
+background:#111827;
+color:white;
+padding:15px;
+text-align:center;
+margin-top:40px;
+}
+
+</style>
 </head>
 
 <body>
 
-<h1>📰 My News Portal</h1>
+<nav>
+<h2>📰 DailyNews</h2>
 
-<div id="news-container" class="news-container"></div>
+<div>
+<a href="./index.html">Home</a>
+<a href="./technology.html">Technology</a>
+<a href="./politics.html">Politics</a>
+<a href="./sports.html">Sports</a>
+<a href="./business.html">Business</a>
+<a href="./entertainment.html">Entertainment</a>
+</div>
+</nav>
 
-<!-- Supabase -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+<div class="hero">
+<h1>Stay Updated with Latest News</h1>
+</div>
+
+<!-- JSON NEWS WILL LOAD HERE -->
+<div class="container" id="news-container"></div>
+
+<footer>
+DailyNews © 2026 | Professional News Portal
+</footer>
 
 <script>
-const supabaseUrl = "https://ufyjbyhjulxarfnvwuvb.supabase.co";
-const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...";
 
-const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+fetch("data.json")
+.then(response => response.json())
+.then(data => {
 
-async function fetchNews() {
-  const { data, error } = await supabase
-    .from("news1")
-    .select("*");
+let container = document.getElementById("news-container");
 
-  if (error) {
-    console.log(error);
-    return;
-  }
+data.forEach(news => {
 
-  const container = document.getElementById("news-container");
-  container.innerHTML = "";
+container.innerHTML += `
+<div class="card">
+<img src="${news.image}">
+<div class="card-content">
+<h3>${news.title}</h3>
+<p>${news.description}</p>
+<p><b>${news.category}</b></p>
+</div>
+</div>
+`;
 
-  data.forEach(item => {
-    container.innerHTML += `
-      <div class="card">
-        <img src="${item.image}">
-        <h3>${item.title}</h3>
-        <p>${item.description}</p>
-        <small>${item.category}</small>
-      </div>
-    `;
-  });
-}
+});
 
-fetchNews();
+})
+.catch(error => console.log("Error loading JSON:", error));
+
 </script>
 
 </body>
 </html>
+```
