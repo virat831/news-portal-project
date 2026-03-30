@@ -1,3 +1,4 @@
+html
 <!DOCTYPE html>
 <html>
 <head>
@@ -119,54 +120,39 @@ margin-top:40px;
 <h1>Stay Updated with Latest News</h1>
 </div>
 
-<!-- NEWS LOAD HERE -->
+<!-- JSON NEWS WILL LOAD HERE -->
 <div class="container" id="news-container"></div>
 
 <footer>
 DailyNews © 2026 | Professional News Portal
 </footer>
 
-<!-- Supabase CDN -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-
 <script>
-const supabaseUrl = "https://ufyjbyhjulxarfnvwuvb.supabase.co";
-const supabaseKey = "sb_publishable_73mw2OvGn_DUxTeL4uE4Tw_HNVZwOTf";
 
-const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+fetch("data.json")
+.then(response => response.json())
+.then(data => {
 
-// Load news from Supabase
-async function loadNews() {
+let container = document.getElementById("news-container");
 
-  const { data, error } = await supabase
-    .from("news1")
-    .select("*");
+data.forEach(news => {
 
-  if (error) {
-    console.log("Error:", error);
-    return;
-  }
+container.innerHTML += `
+<div class="card">
+<img src="${news.image}">
+<div class="card-content">
+<h3>${news.title}</h3>
+<p>${news.description}</p>
+<p><b>${news.category}</b></p>
+</div>
+</div>
+`;
 
-  const container = document.getElementById("news-container");
-  container.innerHTML = "";
+});
 
-  data.forEach(news => {
-    container.innerHTML += `
-    <div class="card">
-      <img src="${news.image}">
-      <div class="card-content">
-        <h3>${news.title}</h3>
-        <p>${news.description}</p>
-        <p><b>${news.category}</b></p>
-      </div>
-    </div>
-    `;
-  });
+})
+.catch(error => console.log("Error loading JSON:", error));
 
-}
-
-loadNews();
 </script>
 
 </body>
-</html>
