@@ -4,7 +4,6 @@
 <title>Daily News Portal</title>
 
 <style>
-
 body{
 font-family: Arial;
 background:#f5f7fa;
@@ -36,7 +35,7 @@ nav div a:hover{
 color:#3b82f6;
 }
 
-/* HERO IMAGE */
+/* HERO */
 .hero{
 height:350px;
 background:url('https://images.unsplash.com/photo-1504711434969-e33886168f5c');
@@ -56,7 +55,7 @@ padding:15px 30px;
 border-radius:10px;
 }
 
-/* NEWS CONTAINER */
+/* NEWS */
 .container{
 padding:40px;
 display:flex;
@@ -65,7 +64,6 @@ flex-wrap:wrap;
 justify-content:center;
 }
 
-/* CARD */
 .card{
 background:white;
 width:280px;
@@ -96,7 +94,6 @@ padding:15px;
 text-align:center;
 margin-top:40px;
 }
-
 </style>
 </head>
 
@@ -104,7 +101,6 @@ margin-top:40px;
 
 <nav>
 <h2>📰 DailyNews</h2>
-
 <div>
 <a href="./index.html">Home</a>
 <a href="./technology.html">Technology</a>
@@ -119,15 +115,14 @@ margin-top:40px;
 <h1>Stay Updated with Latest News</h1>
 </div>
 
-<!-- NEWS LOAD HERE -->
 <div class="container" id="news-container"></div>
 
 <footer>
 DailyNews © 2026 | Professional News Portal
 </footer>
 
-<!-- Supabase CDN -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+<!-- ✅ FIXED CDN -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
 const supabaseUrl = "https://ufyjbyhjulxarfnvwuvb.supabase.co";
@@ -138,46 +133,41 @@ const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 async function loadNews() {
   const container = document.getElementById("news-container");
 
-  try {
-    const { data, error } = await supabase
-      .from("news1")
-      .select("*");
+  const { data, error } = await supabase
+    .from("news1")
+    .select("*");
 
-    console.log("DATA:", data); // Debug
+  console.log("DATA:", data);
+  console.log("ERROR:", error);
 
-    if (error) {
-      container.innerHTML = "<h2>Error loading data</h2>";
-      console.log(error);
-      return;
-    }
-
-    if (!data || data.length === 0) {
-      container.innerHTML = "<h2>No news found</h2>";
-      return;
-    }
-
-    container.innerHTML = "";
-
-    data.forEach(news => {
-      container.innerHTML += `
-        <div class="card">
-          <img src="${news.image || 'https://via.placeholder.com/300'}">
-          <div class="card-content">
-            <h3>${news.title || 'No Title'}</h3>
-            <p>${news.description || 'No Description'}</p>
-            <p><b>${news.category || 'General'}</b></p>
-          </div>
-        </div>
-      `;
-    });
-
-  } catch (err) {
-    console.log("Unexpected Error:", err);
-    container.innerHTML = "<h2>Something went wrong</h2>";
+  if (error) {
+    container.innerHTML = "<h2>Error loading data</h2>";
+    return;
   }
+
+  if (!data || data.length === 0) {
+    container.innerHTML = "<h2>No news found</h2>";
+    return;
+  }
+
+  container.innerHTML = "";
+
+  data.forEach(news => {
+    container.innerHTML += `
+      <div class="card">
+        <img src="${news.image || 'https://via.placeholder.com/300'}">
+        <div class="card-content">
+          <h3>${news.title || 'No Title'}</h3>
+          <p>${news.description || 'No Description'}</p>
+          <p><b>${news.category || 'General'}</b></p>
+        </div>
+      </div>
+    `;
+  });
 }
 
 loadNews();
 </script>
+
 </body>
 </html>
