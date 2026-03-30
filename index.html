@@ -100,25 +100,22 @@ margin-top:40px;
 <h2>📰 DailyNews</h2>
 <div>
 <a href="./index.html">Home</a>
-<a href="./technology.html">Technology</a>
-<a href="./politics.html">Politics</a>
-<a href="./sports.html">Sports</a>
-<a href="./business.html">Business</a>
-<a href="./entertainment.html">Entertainment</a>
 </div>
 </nav>
 
 <div class="hero">
-<h1>Stay Updated with Latest News</h1>
+<h1>Live News from Supabase</h1>
 </div>
 
-<div class="container" id="news-container"></div>
+<div class="container" id="news-container">
+<h2>Loading...</h2>
+</div>
 
 <footer>
-DailyNews © 2026 | Professional News Portal
+DailyNews © 2026
 </footer>
 
-<!-- ✅ FIXED SUPABASE CDN -->
+<!-- ✅ CORRECT CDN -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
@@ -130,50 +127,44 @@ const supabase = window.supabase.createClient(
 async function loadNews() {
   const container = document.getElementById("news-container");
 
-  try {
-    const { data, error } = await supabase
-      .from("news1")
-      .select("*");
+  const { data, error } = await supabase
+    .from("news1")
+    .select("*");
 
-    console.log("DATA:", data);
-    console.log("ERROR:", error);
+  console.log("DATA:", data);
+  console.log("ERROR:", error);
 
-    if (error) {
-      container.innerHTML = "<h2>❌ Error loading data</h2>";
-      return;
-    }
-
-    if (!data || data.length === 0) {
-      container.innerHTML = "<h2>⚠️ No news found</h2>";
-      return;
-    }
-
-    container.innerHTML = "";
-
-    data.forEach(news => {
-
-      let imageUrl = "https://via.placeholder.com/300";
-
-      if (news.image && news.image.startsWith("http")) {
-        imageUrl = news.image;
-      }
-
-      container.innerHTML += `
-        <div class="card">
-          <img src="${imageUrl}">
-          <div class="card-content">
-            <h3>${news.title || "No Title"}</h3>
-            <p>${news.description || "No Description"}</p>
-            <p><b>${news.category || "General"}</b></p>
-          </div>
-        </div>
-      `;
-    });
-
-  } catch (err) {
-    console.log(err);
-    container.innerHTML = "<h2>⚠️ Something went wrong</h2>";
+  if (error) {
+    container.innerHTML = "<h2>❌ Error loading data</h2>";
+    return;
   }
+
+  if (!data || data.length === 0) {
+    container.innerHTML = "<h2>⚠️ No data found</h2>";
+    return;
+  }
+
+  container.innerHTML = "";
+
+  data.forEach(news => {
+
+    let img = "https://via.placeholder.com/300";
+
+    if (news.image && news.image.startsWith("http")) {
+      img = news.image;
+    }
+
+    container.innerHTML += `
+      <div class="card">
+        <img src="${img}">
+        <div class="card-content">
+          <h3>${news.title || "No Title"}</h3>
+          <p>${news.description || "No Description"}</p>
+          <p><b>${news.category || "General"}</b></p>
+        </div>
+      </div>
+    `;
+  });
 }
 
 loadNews();
