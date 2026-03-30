@@ -135,38 +135,49 @@ const supabaseKey = "sb_publishable_73mw2OvGn_DUxTeL4uE4Tw_HNVZwOTf";
 
 const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
-// Load news from Supabase
 async function loadNews() {
-
-  const { data, error } = await supabase
-    .from("news1")   // your table name
-    .select("*");
-
-  if (error) {
-    console.log("Error:", error);
-    return;
-  }
-
   const container = document.getElementById("news-container");
-  container.innerHTML = "";
 
-  data.forEach(news => {
-    container.innerHTML += `
-    <div class="card">
-      <img src="${news.image}">
-      <div class="card-content">
-        <h3>${news.title}</h3>
-        <p>${news.description}</p>
-        <p><b>${news.category}</b></p>
-      </div>
-    </div>
-    `;
-  });
+  try {
+    const { data, error } = await supabase
+      .from("news1")
+      .select("*");
 
+    console.log("DATA:", data); // Debug
+
+    if (error) {
+      container.innerHTML = "<h2>Error loading data</h2>";
+      console.log(error);
+      return;
+    }
+
+    if (!data || data.length === 0) {
+      container.innerHTML = "<h2>No news found</h2>";
+      return;
+    }
+
+    container.innerHTML = "";
+
+    data.forEach(news => {
+      container.innerHTML += `
+        <div class="card">
+          <img src="${news.image || 'https://via.placeholder.com/300'}">
+          <div class="card-content">
+            <h3>${news.title || 'No Title'}</h3>
+            <p>${news.description || 'No Description'}</p>
+            <p><b>${news.category || 'General'}</b></p>
+          </div>
+        </div>
+      `;
+    });
+
+  } catch (err) {
+    console.log("Unexpected Error:", err);
+    container.innerHTML = "<h2>Something went wrong</h2>";
+  }
 }
 
 loadNews();
 </script>
-
 </body>
 </html>
