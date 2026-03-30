@@ -108,18 +108,18 @@ margin-top:40px;
 </div>
 
 <div class="container" id="news-container">
-<h2>Loading...</h2>
+<h2>Loading news...</h2>
 </div>
 
 <footer>
 DailyNews © 2026
 </footer>
 
-<!-- ✅ CORRECT CDN -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<!-- ✅ CORRECT SUPABASE CDN -->
+<script src="https://unpkg.com/@supabase/supabase-js@1"></script>
 
 <script>
-const supabase = window.supabase.createClient(
+const supabaseClient = supabase.createClient(
   "https://ufyjbyhjulxarfnvwuvb.supabase.co",
   "sb_publishable_73mw2OvGn_DUxTeL4uE4Tw_HNVZwOTf"
 );
@@ -127,44 +127,50 @@ const supabase = window.supabase.createClient(
 async function loadNews() {
   const container = document.getElementById("news-container");
 
-  const { data, error } = await supabase
-    .from("news1")
-    .select("*");
+  try {
+    const { data, error } = await supabaseClient
+      .from("news1")
+      .select("*");
 
-  console.log("DATA:", data);
-  console.log("ERROR:", error);
+    console.log("DATA:", data);
+    console.log("ERROR:", error);
 
-  if (error) {
-    container.innerHTML = "<h2>❌ Error loading data</h2>";
-    return;
-  }
-
-  if (!data || data.length === 0) {
-    container.innerHTML = "<h2>⚠️ No data found</h2>";
-    return;
-  }
-
-  container.innerHTML = "";
-
-  data.forEach(news => {
-
-    let img = "https://via.placeholder.com/300";
-
-    if (news.image && news.image.startsWith("http")) {
-      img = news.image;
+    if (error) {
+      container.innerHTML = "<h2>❌ Error loading data</h2>";
+      return;
     }
 
-    container.innerHTML += `
-      <div class="card">
-        <img src="${img}">
-        <div class="card-content">
-          <h3>${news.title || "No Title"}</h3>
-          <p>${news.description || "No Description"}</p>
-          <p><b>${news.category || "General"}</b></p>
+    if (!data || data.length === 0) {
+      container.innerHTML = "<h2>⚠️ No news found</h2>";
+      return;
+    }
+
+    container.innerHTML = "";
+
+    data.forEach(news => {
+
+      let imageUrl = "https://via.placeholder.com/300";
+
+      if (news.image && news.image.startsWith("http")) {
+        imageUrl = news.image;
+      }
+
+      container.innerHTML += `
+        <div class="card">
+          <img src="${imageUrl}">
+          <div class="card-content">
+            <h3>${news.title || "No Title"}</h3>
+            <p>${news.description || "No Description"}</p>
+            <p><b>${news.category || "General"}</b></p>
+          </div>
         </div>
-      </div>
-    `;
-  });
+      `;
+    });
+
+  } catch (err) {
+    console.log(err);
+    container.innerHTML = "<h2>⚠️ Connection failed</h2>";
+  }
 }
 
 loadNews();
