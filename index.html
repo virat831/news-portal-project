@@ -1,69 +1,131 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Advanced News Portal</title>
+<title>Daily News Portal</title>
 
 <style>
-body{font-family:Arial;background:#f5f7fa;margin:0;}
+body{
+font-family: Arial;
+background:#f5f7fa;
+margin:0;
+}
 
+/* NAVBAR */
 nav{
 background:#112227;
 padding:15px;
 display:flex;
 justify-content:space-between;
 align-items:center;
+}
+
+nav h2{
 color:white;
+margin-left:20px;
 }
 
-nav input{
-padding:6px;
-border-radius:5px;
-border:none;
+nav div a{
+color:white;
+margin:15px;
+text-decoration:none;
+font-weight:bold;
+cursor:pointer;
 }
 
-.container{
-padding:20px;
+nav div a:hover{
+color:#3b82f6;
+}
+
+/* HERO */
+.hero{
+height:300px;
+background:url('https://images.unsplash.com/photo-1504711434969-e33886168f5c');
+background-size:cover;
+background-position:center;
 display:flex;
-flex-wrap:wrap;
+justify-content:center;
+align-items:center;
+color:white;
+text-align:center;
+}
+
+.hero h1{
+font-size:36px;
+background:rgba(0,0,0,0.6);
+padding:10px 20px;
+border-radius:10px;
+}
+
+/* NEWS */
+.container{
+padding:40px;
+display:flex;
 gap:20px;
+flex-wrap:wrap;
 justify-content:center;
 }
 
 .card{
 background:white;
-width:250px;
+width:260px;
 border-radius:10px;
-box-shadow:0 4px 10px rgba(0,0,0,0.2);
+box-shadow:0 4px 12px rgba(0,0,0,0.2);
 overflow:hidden;
+transition:0.3s;
 }
 
-.card img{width:100%;height:150px;object-fit:cover;}
-
-.card-content{padding:10px;}
-
-button{
-margin:3px;
-padding:5px 10px;
-border:none;
-border-radius:5px;
-cursor:pointer;
+.card:hover{
+transform:scale(1.05);
 }
 
-.add-btn{background:green;color:white;}
-.delete-btn{background:red;color:white;}
+.card img{
+width:100%;
+height:160px;
+object-fit:cover;
+}
+
+.card-content{
+padding:15px;
+}
+
+footer{
+background:#111827;
+color:white;
+padding:15px;
+text-align:center;
+margin-top:40px;
+}
 </style>
 </head>
 
 <body>
 
 <nav>
-<h2>📰 News Portal</h2>
-<input type="text" placeholder="Search..." onkeyup="searchNews(this.value)">
-<button class="add-btn" onclick="addNews()">+ Add</button>
+<h2>📰 DailyNews</h2>
+
+<div>
+<a onclick="filterNews('all')">Home</a>
+<a onclick="filterNews('Technology')">Technology</a>
+<a onclick="filterNews('Politics')">Politics</a>
+<a onclick="filterNews('Sports')">Sports</a>
+<a onclick="filterNews('Business')">Business</a>
+<a onclick="filterNews('Entertainment')">Entertainment</a>
+</div>
 </nav>
 
-<div class="container" id="news-container"></div>
+<div class="hero">
+<h1>Live News from Supabase</h1>
+</div>
 
+<div class="container" id="news-container">
+<h2>Loading news...</h2>
+</div>
+
+<footer>
+DailyNews © 2026
+</footer>
+
+<!-- ✅ Supabase CDN (WORKING) -->
 <script src="https://unpkg.com/@supabase/supabase-js@1"></script>
 
 <script>
@@ -74,58 +136,71 @@ const supabaseClient = supabase.createClient(
 
 let allNews = [];
 
-// LOAD NEWS
-async function loadNews(){
-  const {data} = await supabaseClient.from("news1").select("*");
-  allNews = data;
-  displayNews(allNews);
+// LOAD DATA
+async function loadNews() {
+  const container = document.getElementById("news-container");
+
+  try {
+    const { data, error } = await supabaseClient
+      .from("news1")
+      .select("*");
+
+    console.log("DATA:", data);
+    console.log("ERROR:", error);
+
+    if (error) {
+      container.innerHTML = "<h2>❌ Error loading data</h2>";
+      return;
+    }
+
+    if (!data || data.length === 0) {
+      container.innerHTML = "<h2>⚠️ No news found</h2>";
+      return;
+    }
+
+    allNews = data;
+    displayNews(allNews);
+
+  } catch (err) {
+    console.log(err);
+    container.innerHTML = "<h2>⚠️ Connection failed</h2>";
+  }
 }
 
-// DISPLAY
-function displayNews(data){
-  let container = document.getElementById("news-container");
-  container.innerHTML="";
+// DISPLAY FUNCTION
+function displayNews(newsArray) {
+  const container = document.getElementById("news-container");
+  container.innerHTML = "";
 
-  data.forEach(n=>{
-    container.innerHTML+=`
-    <div class="card">
-      <img src="${n.image || 'https://via.placeholder.com/300'}">
-      <div class="card-content">
-        <h3>${n.title}</h3>
-        <p>${n.description}</p>
-        <p>${n.category}</p>
-        <button class="delete-btn" onclick="deleteNews(${n.id})">Delete</button>
+  newsArray.forEach(news => {
+
+    let imageUrl = "https://via.placeholder.com/300";
+
+    if (news.image && news.image.startsWith("http")) {
+      imageUrl = news.image;
+    }
+
+    container.innerHTML += `
+      <div class="card">
+        <img src="${imageUrl}">
+        <div class="card-content">
+          <h3>${news.title || "No Title"}</h3>
+          <p>${news.description || "No Description"}</p>
+          <p><b>${news.category || "General"}</b></p>
+        </div>
       </div>
-    </div>`;
+    `;
   });
 }
 
-// SEARCH
-function searchNews(text){
-  let filtered = allNews.filter(n =>
-    n.title.toLowerCase().includes(text.toLowerCase())
-  );
-  displayNews(filtered);
-}
-
-// ADD NEWS
-async function addNews(){
-  let title = prompt("Enter Title");
-  let desc = prompt("Enter Description");
-  let cat = prompt("Enter Category");
-  let img = prompt("Enter Image URL");
-
-  await supabaseClient.from("news1").insert([
-    {title:title, description:desc, category:cat, image:img}
-  ]);
-
-  loadNews();
-}
-
-// DELETE
-async function deleteNews(id){
-  await supabaseClient.from("news1").delete().eq("id", id);
-  loadNews();
+// FILTER FUNCTION
+function filterNews(category) {
+  if (category === "all") {
+    displayNews(allNews);
+  } else {
+    const filtered = allNews.filter(news => news.category === category);
+    displayNews(filtered);
+  }
 }
 
 // START
