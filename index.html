@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>News Portal</title>
+<title>Daily News Portal</title>
 
 <style>
 body{
@@ -25,8 +25,18 @@ nav h2{
   margin:0;
 }
 
+/* SEARCH */
+.search-box{
+  padding:8px;
+  border-radius:5px;
+  border:none;
+  width:200px;
+}
+
 /* MENU */
 .menu{
+  width:100%;
+  text-align:center;
   margin-top:10px;
 }
 
@@ -41,12 +51,23 @@ nav h2{
   color:#3b82f6;
 }
 
-/* SEARCH */
-.search-box{
-  padding:8px;
-  border-radius:5px;
-  border:none;
-  width:200px;
+/* HERO */
+.hero{
+  height:300px;
+  background:url('https://images.unsplash.com/photo-1504711434969-e33886168f5c');
+  background-size:cover;
+  background-position:center;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  color:white;
+}
+
+.hero h1{
+  background:rgba(0,0,0,0.6);
+  padding:15px 25px;
+  border-radius:10px;
+  font-size:36px;
 }
 
 /* NEWS */
@@ -58,7 +79,6 @@ nav h2{
   justify-content:center;
 }
 
-/* CARD */
 .card{
   background:white;
   width:260px;
@@ -109,6 +129,11 @@ footer{
   </div>
 </nav>
 
+<!-- ✅ HERO SECTION BACK -->
+<div class="hero">
+  <h1>Stay Updated with Latest News</h1>
+</div>
+
 <!-- NEWS -->
 <div class="container" id="news-container">
   <h2>Loading...</h2>
@@ -145,22 +170,22 @@ async function loadNews() {
   displayNews(allNews);
 }
 
-// DISPLAY FUNCTION
+// DISPLAY
 function displayNews(newsArray) {
   const container = document.getElementById("news-container");
   container.innerHTML = "";
 
   newsArray.forEach(news => {
 
-    let imageUrl = "https://via.placeholder.com/300";
+    let img = "https://via.placeholder.com/300";
 
     if (news.image && news.image.startsWith("http")) {
-      imageUrl = news.image;
+      img = news.image;
     }
 
     container.innerHTML += `
       <div class="card">
-        <img src="${imageUrl}">
+        <img src="${img}">
         <div class="card-content">
           <h3>${news.title}</h3>
           <p>${news.description}</p>
@@ -178,12 +203,11 @@ function filterNews(category) {
   if (category === "all") {
     displayNews(allNews);
   } else {
-    const filtered = allNews.filter(n => n.category === category);
-    displayNews(filtered);
+    displayNews(allNews.filter(n => n.category === category));
   }
 }
 
-// SEARCH FUNCTION
+// SEARCH
 function searchNews(text) {
   let filtered = allNews;
 
