@@ -1,131 +1,124 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Daily News Portal</title>
+<title>News Portal</title>
 
 <style>
 body{
-font-family: Arial;
-background:#f5f7fa;
-margin:0;
+  font-family: Arial;
+  margin:0;
+  background:#f5f5f5;
 }
 
 /* NAVBAR */
 nav{
-background:#112227;
-padding:15px;
-display:flex;
-justify-content:space-between;
-align-items:center;
+  background:#112227;
+  padding:15px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  flex-wrap:wrap;
 }
 
 nav h2{
-color:white;
-margin-left:20px;
+  color:white;
+  margin:0;
 }
 
-nav div a{
-color:white;
-margin:15px;
-text-decoration:none;
-font-weight:bold;
-cursor:pointer;
+/* MENU */
+.menu{
+  margin-top:10px;
 }
 
-nav div a:hover{
-color:#3b82f6;
+.menu a{
+  color:white;
+  margin:10px;
+  cursor:pointer;
+  font-weight:bold;
 }
 
-/* HERO */
-.hero{
-height:300px;
-background:url('https://images.unsplash.com/photo-1504711434969-e33886168f5c');
-background-size:cover;
-background-position:center;
-display:flex;
-justify-content:center;
-align-items:center;
-color:white;
-text-align:center;
+.menu a:hover{
+  color:#3b82f6;
 }
 
-.hero h1{
-font-size:36px;
-background:rgba(0,0,0,0.6);
-padding:10px 20px;
-border-radius:10px;
+/* SEARCH */
+.search-box{
+  padding:8px;
+  border-radius:5px;
+  border:none;
+  width:200px;
 }
 
 /* NEWS */
 .container{
-padding:40px;
-display:flex;
-gap:20px;
-flex-wrap:wrap;
-justify-content:center;
+  display:flex;
+  flex-wrap:wrap;
+  gap:20px;
+  padding:30px;
+  justify-content:center;
 }
 
+/* CARD */
 .card{
-background:white;
-width:260px;
-border-radius:10px;
-box-shadow:0 4px 12px rgba(0,0,0,0.2);
-overflow:hidden;
-transition:0.3s;
-}
-
-.card:hover{
-transform:scale(1.05);
+  background:white;
+  width:260px;
+  border-radius:10px;
+  box-shadow:0 4px 10px rgba(0,0,0,0.2);
+  overflow:hidden;
 }
 
 .card img{
-width:100%;
-height:160px;
-object-fit:cover;
+  width:100%;
+  height:160px;
+  object-fit:cover;
 }
 
 .card-content{
-padding:15px;
+  padding:15px;
 }
 
 footer{
-background:#111827;
-color:white;
-padding:15px;
-text-align:center;
-margin-top:40px;
+  background:#111827;
+  color:white;
+  text-align:center;
+  padding:10px;
 }
 </style>
 </head>
 
 <body>
 
+<!-- NAVBAR -->
 <nav>
-<h2>📰 DailyNews</h2>
+  <h2>📰 DailyNews</h2>
 
-<div>
-<a onclick="filterNews('all')">Home</a>
-<a onclick="filterNews('Technology')">Technology</a>
-<a onclick="filterNews('Politics')">Politics</a>
-<a onclick="filterNews('Sports')">Sports</a>
-<a onclick="filterNews('Business')">Business</a>
-<a onclick="filterNews('Entertainment')">Entertainment</a>
-</div>
+  <input 
+    class="search-box"
+    type="text" 
+    placeholder="Search..." 
+    onkeyup="searchNews(this.value)"
+  >
+
+  <div class="menu">
+    <a onclick="filterNews('all')">Home</a>
+    <a onclick="filterNews('Technology')">Technology</a>
+    <a onclick="filterNews('Politics')">Politics</a>
+    <a onclick="filterNews('Sports')">Sports</a>
+    <a onclick="filterNews('Business')">Business</a>
+    <a onclick="filterNews('Entertainment')">Entertainment</a>
+  </div>
 </nav>
 
-<div class="hero">
-<h1>Live News from Supabase</h1>
-</div>
-
+<!-- NEWS -->
 <div class="container" id="news-container">
-<h2>Loading news...</h2>
+  <h2>Loading...</h2>
 </div>
 
 <footer>
 DailyNews © 2026
 </footer>
 
-<!-- ✅ Supabase CDN (WORKING) -->
+<!-- SUPABASE -->
 <script src="https://unpkg.com/@supabase/supabase-js@1"></script>
 
 <script>
@@ -135,36 +128,21 @@ const supabaseClient = supabase.createClient(
 );
 
 let allNews = [];
+let currentCategory = "all";
 
 // LOAD DATA
 async function loadNews() {
-  const container = document.getElementById("news-container");
+  const { data, error } = await supabaseClient
+    .from("news1")
+    .select("*");
 
-  try {
-    const { data, error } = await supabaseClient
-      .from("news1")
-      .select("*");
-
-    console.log("DATA:", data);
-    console.log("ERROR:", error);
-
-    if (error) {
-      container.innerHTML = "<h2>❌ Error loading data</h2>";
-      return;
-    }
-
-    if (!data || data.length === 0) {
-      container.innerHTML = "<h2>⚠️ No news found</h2>";
-      return;
-    }
-
-    allNews = data;
-    displayNews(allNews);
-
-  } catch (err) {
-    console.log(err);
-    container.innerHTML = "<h2>⚠️ Connection failed</h2>";
+  if (error) {
+    document.getElementById("news-container").innerHTML = "Error loading data";
+    return;
   }
+
+  allNews = data;
+  displayNews(allNews);
 }
 
 // DISPLAY FUNCTION
@@ -184,23 +162,41 @@ function displayNews(newsArray) {
       <div class="card">
         <img src="${imageUrl}">
         <div class="card-content">
-          <h3>${news.title || "No Title"}</h3>
-          <p>${news.description || "No Description"}</p>
-          <p><b>${news.category || "General"}</b></p>
+          <h3>${news.title}</h3>
+          <p>${news.description}</p>
+          <p><b>${news.category}</b></p>
         </div>
       </div>
     `;
   });
 }
 
-// FILTER FUNCTION
+// CATEGORY FILTER
 function filterNews(category) {
+  currentCategory = category;
+
   if (category === "all") {
     displayNews(allNews);
   } else {
-    const filtered = allNews.filter(news => news.category === category);
+    const filtered = allNews.filter(n => n.category === category);
     displayNews(filtered);
   }
+}
+
+// SEARCH FUNCTION
+function searchNews(text) {
+  let filtered = allNews;
+
+  if (currentCategory !== "all") {
+    filtered = filtered.filter(n => n.category === currentCategory);
+  }
+
+  filtered = filtered.filter(n =>
+    (n.title || "").toLowerCase().includes(text.toLowerCase()) ||
+    (n.description || "").toLowerCase().includes(text.toLowerCase())
+  );
+
+  displayNews(filtered);
 }
 
 // START
