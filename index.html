@@ -20,12 +20,8 @@ nav{
   flex-wrap:wrap;
 }
 
-nav h2{
-  color:white;
-  margin:0;
-}
+nav h2{color:white;margin:0;}
 
-/* SEARCH */
 .search-box{
   padding:8px;
   border-radius:5px;
@@ -33,7 +29,6 @@ nav h2{
   width:200px;
 }
 
-/* MENU */
 .menu{
   width:100%;
   text-align:center;
@@ -47,11 +42,8 @@ nav h2{
   font-weight:bold;
 }
 
-.menu a:hover{
-  color:#3b82f6;
-}
+.menu a:hover{color:#3b82f6;}
 
-/* HERO */
 .hero{
   height:300px;
   background:url('https://images.unsplash.com/photo-1504711434969-e33886168f5c');
@@ -67,7 +59,27 @@ nav h2{
   background:rgba(0,0,0,0.6);
   padding:15px 25px;
   border-radius:10px;
-  font-size:36px;
+}
+
+/* ADMIN FORM */
+.form-box{
+  display:none;
+  text-align:center;
+  padding:20px;
+}
+
+.form-box input{
+  padding:8px;
+  margin:5px;
+  width:220px;
+}
+
+.form-box button{
+  padding:10px;
+  background:green;
+  color:white;
+  border:none;
+  cursor:pointer;
 }
 
 /* NEWS */
@@ -93,8 +105,15 @@ nav h2{
   object-fit:cover;
 }
 
-.card-content{
-  padding:15px;
+.card-content{padding:15px;}
+
+.delete-btn{
+  background:red;
+  color:white;
+  border:none;
+  padding:5px;
+  cursor:pointer;
+  margin-top:5px;
 }
 
 footer{
@@ -112,12 +131,9 @@ footer{
 <nav>
   <h2>📰 DailyNews</h2>
 
-  <input 
-    class="search-box"
-    type="text" 
-    placeholder="Search..." 
-    onkeyup="searchNews(this.value)"
-  >
+  <input class="search-box" type="text" placeholder="Search..." onkeyup="searchNews(this.value)">
+
+  <button onclick="login()">Admin</button>
 
   <div class="menu">
     <a onclick="filterNews('all')">Home</a>
@@ -129,15 +145,23 @@ footer{
   </div>
 </nav>
 
-<!-- ✅ HERO SECTION BACK -->
+<!-- HERO -->
 <div class="hero">
   <h1>Stay Updated with Latest News</h1>
 </div>
 
-<!-- NEWS -->
-<div class="container" id="news-container">
-  <h2>Loading...</h2>
+<!-- ADMIN FORM -->
+<div class="form-box" id="adminForm">
+  <h2>Add News</h2>
+  <input id="title" placeholder="Title"><br>
+  <input id="desc" placeholder="Description"><br>
+  <input id="img" placeholder="Image URL"><br>
+  <input id="cat" placeholder="Category"><br>
+  <button onclick="addNews()">Add News</button>
 </div>
+
+<!-- NEWS -->
+<div class="container" id="news-container"></div>
 
 <footer>
 DailyNews © 2026
@@ -154,64 +178,61 @@ const supabaseClient = supabase.createClient(
 
 let allNews = [];
 let currentCategory = "all";
+let isAdmin = false;
 
-// LOAD DATA
-async function loadNews() {
-  const { data, error } = await supabaseClient
-    .from("news1")
-    .select("*");
-
-  if (error) {
-    document.getElementById("news-container").innerHTML = "Error loading data";
-    return;
-  }
-
+// LOAD NEWS
+async function loadNews(){
+  const { data } = await supabaseClient.from("news1").select("*");
   allNews = data;
-  displayNews(allNews);
+  displayNews(data);
 }
 
-// DISPLAY
-function displayNews(newsArray) {
-  const container = document.getElementById("news-container");
+// DISPLAY NEWS
+function displayNews(data){
+  let container = document.getElementById("news-container");
   container.innerHTML = "";
 
-  newsArray.forEach(news => {
+  data.forEach(n => {
 
-    let img = "https://via.placeholder.com/300";
+    let deleteBtn = "";
 
-    if (news.image && news.image.startsWith("http")) {
-      img = news.image;
+    if(isAdmin){
+      deleteBtn = `<button class="delete-btn" onclick="deleteNews(${n.id})">Delete</button>`;
     }
 
+    let img = n.image && n.image.startsWith("http")
+      ? n.image
+      : "https://via.placeholder.com/300";
+
     container.innerHTML += `
-      <div class="card">
-        <img src="${img}">
-        <div class="card-content">
-          <h3>${news.title}</h3>
-          <p>${news.description}</p>
-          <p><b>${news.category}</b></p>
-        </div>
+    <div class="card">
+      <img src="${img}">
+      <div class="card-content">
+        <h3>${n.title}</h3>
+        <p>${n.description}</p>
+        <p><b>${n.category}</b></p>
+        ${deleteBtn}
       </div>
-    `;
+    </div>`;
   });
 }
 
-// CATEGORY FILTER
-function filterNews(category) {
-  currentCategory = category;
+// FILTER
+function filterNews(cat){
+  currentCategory = cat;
 
-  if (category === "all") {
+  if(cat === "all"){
     displayNews(allNews);
   } else {
-    displayNews(allNews.filter(n => n.category === category));
+    displayNews(allNews.filter(n => n.category === cat));
   }
 }
 
 // SEARCH
-function searchNews(text) {
+function searchNews(text){
   let filtered = allNews;
 
-  if (currentCategory !== "all") {
+  if(currentCategory !== "all"){
     filtered = filtered.filter(n => n.category === currentCategory);
   }
 
@@ -221,6 +242,48 @@ function searchNews(text) {
   );
 
   displayNews(filtered);
+}
+
+// ADD NEWS
+async function addNews(){
+  if(!isAdmin){
+    alert("Only admin can add news ❌");
+    return;
+  }
+
+  await supabaseClient.from("news1").insert([{
+    title: document.getElementById("title").value,
+    description: document.getElementById("desc").value,
+    image: document.getElementById("img").value,
+    category: document.getElementById("cat").value
+  }]);
+
+  loadNews();
+}
+
+// DELETE NEWS
+async function deleteNews(id){
+  if(!isAdmin){
+    alert("Only admin can delete ❌");
+    return;
+  }
+
+  await supabaseClient.from("news1").delete().eq("id", id);
+  loadNews();
+}
+
+// ADMIN LOGIN
+function login(){
+  let pass = prompt("Enter Admin Password:");
+
+  if(pass === "1234"){
+    isAdmin = true;
+    document.getElementById("adminForm").style.display = "block";
+    alert("Admin Mode Enabled ✅");
+    loadNews();
+  } else {
+    alert("Wrong password ❌");
+  }
 }
 
 // START
